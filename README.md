@@ -16,11 +16,29 @@
 | 轻微魔法漂浮 | 鼠标移入宠物时；Codex 会自动连续播放 3 次 |
 | 沮丧 | 任务失败、阻塞或出现危险级提示时 |
 | 等待 | Codex 需要输入、确认或授权时 |
-| 忙碌施法 | 任务运行、思考或处理中 |
+| 托腮思考 | 任务运行、思考或处理中 |
 | 检查成果 | 任务成功完成、结果等待查看时 |
 | 16 向注视 | 鼠标在宠物周围移动时，脸和视线会跟随指针方向 |
 
 这些动作由 Codex 的界面状态自动触发，不能在宠物包里单独绑定快捷键。非待机状态通常会短暂播放数轮，然后回到待机。悬浮动作已改为保持直立、最高上浮约 5 像素并眨眼，不再下蹲或落地回弹。
+
+### 思考动画优化
+
+![平滑后的思考动画](qa/thinking-preview.gif)
+
+Codex v2 的 `running` 状态固定使用 6 帧，前 5 帧各显示 120ms，最后一帧显示 220ms。旧版在不到一秒内依次切换站立、托腮、抱臂、施法、合掌和举手，连续播放时容易显得抽搐。
+
+新版统一使用托腮姿势，只加入 1 像素的呼吸位移和一帧轻微眨眼；首尾帧逐像素一致，因此循环边界不会跳变。除 `running` 所在的第 8 行外，其余图集行保持不变。详细验证结果见 [`qa/thinking-repair.json`](qa/thinking-repair.json)。
+
+维护者可使用以下命令重新生成图集、动画预览和验证报告（需要 Pillow）：
+
+```sh
+python scripts/refine_thinking_animation.py \
+  --input pet/frieren-pixel/spritesheet.webp \
+  --output pet/frieren-pixel/spritesheet.webp \
+  --preview qa/thinking-preview.gif \
+  --report qa/thinking-repair.json
+```
 
 ## 一键安装
 

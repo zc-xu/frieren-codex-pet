@@ -6,8 +6,10 @@
   "validation": "qa/validation.json",
   "contactSheet": "qa/contact-sheet.png",
   "hoverPreview": "qa/hover-preview.gif",
+  "thinkingPreview": "qa/thinking-preview.gif",
   "directionSheet": "qa/look-directions.png",
   "directionSemantics": "qa/direction-semantics.json",
   "blindDirectionValidation": "qa/direction-blind-validation.json",
-  "hoverRepair": "qa/hover-repair.json"
+  "hoverRepair": "qa/hover-repair.json",
+  "thinkingRepair": "qa/thinking-repair.json"
 }

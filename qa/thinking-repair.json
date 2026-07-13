@@ -1,0 +1,54 @@
+{
+  "ok": true,
+  "state": "running",
+  "row": 7,
+  "frameCount": 6,
+  "frameDurationsMs": [
+    120,
+    120,
+    120,
+    120,
+    120,
+    220
+  ],
+  "baseFrame": {
+    "row": 7,
+    "column": 1
+  },
+  "blinkSourceFrame": {
+    "row": 0,
+    "column": 2
+  },
+  "blinkFrameIndex": 3,
+  "blinkPatchBox": [
+    68,
+    63,
+    124,
+    83
+  ],
+  "verticalOffsets": [
+    0,
+    0,
+    -1,
+    -1,
+    0,
+    0
+  ],
+  "loopBoundaryExact": true,
+  "changedRows": [
+    7
+  ],
+  "unchangedRows": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10
+  ],
+  "transparentUnusedCells": true
+}
