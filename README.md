@@ -41,17 +41,12 @@ macOS 或 Linux：
 
 ## 两台电脑同步
 
-本目录本身就是一个已提交的 Git 仓库。建议先在 GitHub 创建名为 `frieren-codex-pet` 的私有空仓库，然后在本机执行：
-
-```sh
-git remote add origin git@github.com:<你的用户名>/frieren-codex-pet.git
-git push -u origin main
-```
+本项目已发布到私有仓库：<https://github.com/zc-xu/frieren-codex-pet>。另一台电脑需要先登录有权访问该仓库的 GitHub 账号。
 
 第二台电脑首次执行：
 
 ```sh
-git clone git@github.com:<你的用户名>/frieren-codex-pet.git
+git clone https://github.com/zc-xu/frieren-codex-pet.git
 cd frieren-codex-pet
 ./install.sh
 ```
