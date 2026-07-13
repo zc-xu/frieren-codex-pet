@@ -1,0 +1,11 @@
+{
+  "state": "jumping",
+  "codexTrigger": "pointer-enter",
+  "playbackCycles": 3,
+  "repair": "reuse approved upright idle pixels as a gentle hover bob",
+  "sourceColumns": [0, 1, 2, 4, 5],
+  "verticalOffsets": [0, -2, -5, -2, 0],
+  "crouchRemoved": true,
+  "allOtherAtlasRowsPreservedExactly": true,
+  "lookRowsPreservedExactly": true
+}
