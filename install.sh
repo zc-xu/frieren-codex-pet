@@ -9,7 +9,6 @@ PET_ROOT="$CODEX_HOME/pets"
 TARGET_DIR="$PET_ROOT/$PET_ID"
 CONFIG_FILE="$CODEX_HOME/config.toml"
 SELECTED_ID="custom:$PET_ID"
-STAMP=$(date +%Y%m%d-%H%M%S)
 
 if [ ! -f "$SOURCE_DIR/pet.json" ] || [ ! -f "$SOURCE_DIR/spritesheet.webp" ]; then
   echo "Pet package is incomplete: $SOURCE_DIR" >&2
@@ -17,17 +16,32 @@ if [ ! -f "$SOURCE_DIR/pet.json" ] || [ ! -f "$SOURCE_DIR/spritesheet.webp" ]; t
 fi
 
 mkdir -p "$PET_ROOT"
-if [ -d "$TARGET_DIR" ]; then
-  mv "$TARGET_DIR" "$TARGET_DIR.backup-$STAMP"
-fi
 mkdir -p "$TARGET_DIR"
-cp "$SOURCE_DIR/pet.json" "$TARGET_DIR/pet.json"
-cp "$SOURCE_DIR/spritesheet.webp" "$TARGET_DIR/spritesheet.webp"
+
+# Keep one stable custom-pet directory. Stage each file beside its destination
+# and rename it into place so updates never create another scan-visible pet.
+TMP_PET_JSON="$TARGET_DIR/.pet.json.tmp.$$"
+TMP_SPRITESHEET="$TARGET_DIR/.spritesheet.webp.tmp.$$"
+trap 'rm -f "$TMP_PET_JSON" "$TMP_SPRITESHEET"' EXIT HUP INT TERM
+cp "$SOURCE_DIR/pet.json" "$TMP_PET_JSON"
+cp "$SOURCE_DIR/spritesheet.webp" "$TMP_SPRITESHEET"
+mv "$TMP_SPRITESHEET" "$TARGET_DIR/spritesheet.webp"
+mv "$TMP_PET_JSON" "$TARGET_DIR/pet.json"
+trap - EXIT HUP INT TERM
+
+# Older installers moved the active directory to frieren-pixel.backup-*, and
+# Codex treated every one as another pet because each still contained pet.json.
+# The repository is the version history now, so remove those obsolete copies.
+LEGACY_COUNT=0
+for LEGACY_DIR in "$PET_ROOT/$PET_ID".backup-*; do
+  if [ -d "$LEGACY_DIR" ]; then
+    rm -rf "$LEGACY_DIR"
+    LEGACY_COUNT=$((LEGACY_COUNT + 1))
+  fi
+done
 
 mkdir -p "$CODEX_HOME"
-if [ -f "$CONFIG_FILE" ]; then
-  cp "$CONFIG_FILE" "$CONFIG_FILE.backup-$STAMP"
-else
+if [ ! -f "$CONFIG_FILE" ]; then
   : > "$CONFIG_FILE"
 fi
 
@@ -69,5 +83,8 @@ END {
 mv "$TMP_CONFIG" "$CONFIG_FILE"
 
 echo "Installed Frieren Pixel to $TARGET_DIR"
+if [ "$LEGACY_COUNT" -gt 0 ]; then
+  echo "Removed $LEGACY_COUNT obsolete Frieren Pixel backup directories."
+fi
 echo "Selected $SELECTED_ID in $CONFIG_FILE"
 echo "Restart Codex to load the pet."

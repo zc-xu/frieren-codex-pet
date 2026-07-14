@@ -53,9 +53,10 @@ macOS 或 Linux：
 脚本会：
 
 - 将宠物安装到 `${CODEX_HOME:-$HOME/.codex}/pets/frieren-pixel`
-- 备份已有的同名宠物和 `config.toml`
+- 在固定的 `frieren-pixel` 目录内原子覆盖 `pet.json` 和 `spritesheet.webp`
+- 自动清理旧版安装脚本留下的 `frieren-pixel.backup-*` 重复宠物目录
 - 将 `desktop.selected-avatar-id` 设为 `custom:frieren-pixel`
-- 保留重复执行的安全性
+- 重复执行不会生成新的宠物档案或时间戳备份
 
 安装后重启 Codex。
 
@@ -76,6 +77,8 @@ cd frieren-codex-pet
 ```sh
 git pull && ./install.sh
 ```
+
+安装脚本始终更新同一个宠物 ID 和目录，因此仓库更新会直接应用到当前的 Frieren Pixel 档案，不会在宠物列表中累积副本。
 
 ## 卸载
 

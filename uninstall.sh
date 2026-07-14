@@ -7,6 +7,11 @@ TARGET_DIR="$CODEX_HOME/pets/$PET_ID"
 CONFIG_FILE="$CODEX_HOME/config.toml"
 
 rm -rf "$TARGET_DIR"
+for LEGACY_DIR in "$CODEX_HOME/pets/$PET_ID".backup-*; do
+  if [ -d "$LEGACY_DIR" ]; then
+    rm -rf "$LEGACY_DIR"
+  fi
+done
 
 if [ -f "$CONFIG_FILE" ]; then
   TMP_CONFIG="$CONFIG_FILE.tmp.$$"
