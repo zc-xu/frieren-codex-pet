@@ -1,7 +1,7 @@
 {
   "ok": true,
   "spriteVersionNumber": 2,
-  "repair": "pointer-hover jumping row replaced with gentle upright levitation",
+  "repair": "pointer-hover jumping row uses gentle upright levitation; thinking row uses one face-locked source frame without cross-state patches",
   "spritesheet": "pet/frieren-pixel/spritesheet.webp",
   "validation": "qa/validation.json",
   "contactSheet": "qa/contact-sheet.png",

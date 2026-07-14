@@ -21,12 +21,12 @@ FRAME_DURATIONS_MS = [120, 120, 120, 120, 120, 220]
 
 # Keep one readable thinking silhouette throughout. The tiny one-pixel lift is
 # slow enough to read as breathing, while the identical first/last frames make
-# the loop boundary invisible.
+# the loop boundary invisible. Every frame comes from the same source cell so
+# the face, hair, hand, and body can never switch to a differently registered
+# drawing mid-loop.
 VERTICAL_OFFSETS = [0, 0, -1, -1, 0, 0]
 BASE_FRAME = (7, 1)
-BLINK_SOURCE_FRAME = (0, 2)
-BLINK_FRAME_INDEX = 3
-BLINK_PATCH_BOX = (68, 63, 124, 83)
+FACE_LOCK_BOX = (52, 36, 140, 112)
 
 
 def parse_args() -> argparse.Namespace:
@@ -50,10 +50,11 @@ def shifted(frame: Image.Image, dy: int) -> Image.Image:
     return result
 
 
-def make_blink(base: Image.Image, blink_source: Image.Image) -> Image.Image:
-    result = base.copy()
-    result.paste(blink_source.crop(BLINK_PATCH_BOX), BLINK_PATCH_BOX[:2])
-    return result
+def face_matches_source(frame: Image.Image, source: Image.Image, dy: int) -> bool:
+    left, top, right, bottom = FACE_LOCK_BOX
+    source_face = source.crop(FACE_LOCK_BOX)
+    shifted_face = frame.crop((left, top + dy, right, bottom + dy))
+    return source_face.tobytes() == shifted_face.tobytes()
 
 
 def row_digest(atlas: Image.Image, row: int) -> str:
@@ -91,13 +92,7 @@ def main() -> None:
 
     before_digests = [row_digest(source, row) for row in range(ATLAS_ROWS)]
     base = crop_cell(source, *BASE_FRAME)
-    blink_source = crop_cell(source, *BLINK_SOURCE_FRAME)
-    blink = make_blink(base, blink_source)
-
-    frames = []
-    for index, dy in enumerate(VERTICAL_OFFSETS):
-        frame = blink if index == BLINK_FRAME_INDEX else base
-        frames.append(shifted(frame, dy))
+    frames = [shifted(base, dy) for dy in VERTICAL_OFFSETS]
 
     output = source.copy()
     clear_row = Image.new("RGBA", (output.width, CELL_HEIGHT), (0, 0, 0, 0))
@@ -124,13 +119,13 @@ def main() -> None:
         "row": THINKING_ROW,
         "frameCount": THINKING_FRAMES,
         "frameDurationsMs": FRAME_DURATIONS_MS,
-        "baseFrame": {"row": BASE_FRAME[0], "column": BASE_FRAME[1]},
-        "blinkSourceFrame": {
-            "row": BLINK_SOURCE_FRAME[0],
-            "column": BLINK_SOURCE_FRAME[1],
-        },
-        "blinkFrameIndex": BLINK_FRAME_INDEX,
-        "blinkPatchBox": list(BLINK_PATCH_BOX),
+        "singleSourceFrame": {"row": BASE_FRAME[0], "column": BASE_FRAME[1]},
+        "faceLockBox": list(FACE_LOCK_BOX),
+        "faceAlignedExact": [
+            face_matches_source(frame, base, dy)
+            for frame, dy in zip(frames, VERTICAL_OFFSETS, strict=True)
+        ],
+        "crossStateFacePatches": 0,
         "verticalOffsets": VERTICAL_OFFSETS,
         "loopBoundaryExact": frames[0].tobytes() == frames[-1].tobytes(),
         "changedRows": changed_rows,
@@ -140,8 +135,9 @@ def main() -> None:
             for column in range(THINKING_FRAMES, ATLAS_COLUMNS)
         ),
     }
+    report["ok"] = report["ok"] and all(report["faceAlignedExact"])
     if not report["ok"]:
-        raise SystemExit(f"Unexpected atlas row changes: {changed_rows}")
+        raise SystemExit(f"Thinking animation validation failed: {report}")
 
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)
