@@ -14,7 +14,7 @@
 | 向右跑 / 向左跑 | 按住宠物并向右 / 向左拖动 |
 | 挥手 | 宠物首次唤醒或出现问候提示时 |
 | 轻微魔法漂浮 | 鼠标移入宠物时；Codex 会自动连续播放 3 次 |
-| 沮丧 | 任务失败、阻塞或出现危险级提示时 |
+| 轻微沮丧 | 任务失败、阻塞或出现危险级提示时；低头、闭眼停顿后缓慢回位 |
 | 等待 | Codex 需要输入、确认或授权时 |
 | 托腮思考 | 任务运行、思考或处理中 |
 | 检查成果 | 任务成功完成、结果等待查看时 |
@@ -40,6 +40,25 @@ python scripts/refine_thinking_animation.py \
   --output pet/frieren-pixel/spritesheet.webp \
   --preview qa/thinking-preview.gif \
   --report qa/thinking-repair.json
+```
+
+### 失败动画优化
+
+![平滑后的失败动画（按 Codex 实际节拍连续 3 轮）](qa/failed-preview.gif)
+
+Codex 固定将 `failed` 状态播放为 8 帧：前 7 帧各 `140ms`，最后一帧 `240ms`，并连续重复 3 次；宠物包无法覆盖这组客户端节拍。旧版在这 3.66 秒内反复执行大幅低头、坐下和重新站起，因此看起来又快又频繁。
+
+新版把整行改成全程站立的低幅度循环：轻微低头、垂肩、闭眼停顿，再平缓回位。双脚始终锁定同一基线，角色尺度不变，首尾姿态接近，所以客户端的三次重播看起来像一次持续的沮丧停顿。除 `failed` 所在的第 6 行外，其余 10 行逐像素保持不变。详细验证结果见 [`qa/failed-repair.json`](qa/failed-repair.json)。
+
+失败行源帧保存在 `source/failed`。维护者可使用以下命令重新装配图集、生成真实三轮预览并验证未误改其他行：
+
+```sh
+python scripts/replace_failed_animation.py \
+  --input pet/frieren-pixel/spritesheet.webp \
+  --frames-dir source/failed \
+  --output pet/frieren-pixel/spritesheet.webp \
+  --preview qa/failed-preview.gif \
+  --report qa/failed-repair.json
 ```
 
 ## 一键安装

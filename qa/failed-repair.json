@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "input": "/Users/spurs/Documents/Codex/2026-07-13/hatch-pet-users-spurs-codex-skills/outputs/frieren-codex-pet/pet/frieren-pixel/spritesheet.webp",
+  "output": "/Users/spurs/Documents/Codex/2026-07-13/hatch-pet-users-spurs-codex-skills/work/frieren-failed-repair/final/spritesheet.webp",
+  "frames_dir": "/Users/spurs/Documents/Codex/2026-07-13/hatch-pet-users-spurs-codex-skills/outputs/frieren-codex-pet/source/failed",
+  "changed_rows_zero_based": [
+    5
+  ],
+  "saved_changed_rows_zero_based": [
+    5
+  ],
+  "failed_row_updated": true,
+  "preserved_rows_pixel_identical": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "frame_durations_ms": [
+    140,
+    140,
+    140,
+    140,
+    140,
+    140,
+    140,
+    240
+  ],
+  "host_repeat_count": 3,
+  "cycle_duration_ms": 1220,
+  "host_sequence_duration_ms": 3660,
+  "before_rgba_sha256": "c090d951507f75350ef0e2f16d9c7fda51e0891d6d3e2b4eec59236dff38bf65",
+  "after_rgba_sha256": "fc52aa90d2b1978526d2b4588a7f824ca6b6e1c1cbb305570565dc2da6e34ec7",
+  "saved_rgba_sha256": "fc52aa90d2b1978526d2b4588a7f824ca6b6e1c1cbb305570565dc2da6e34ec7",
+  "frame_rgba_sha256": [
+    "06b65edcf157767f059ea32539b9e1fe5d471aabb73723c2782887797c12bdd7",
+    "2ea84c8957fed638854f920f0476fe18ddb6a1e9d3f1a127d12d8c6f07424195",
+    "d024c41e568caa405f69d925852758125cebbd37b3402b65ec519405b02679dc",
+    "ae135c6862f9364b8e325316763e1e6931ee01bdcfa94030214811cc7ef98be4",
+    "4da92dcf7772960f10b6a22d38e4fe1cea3b45860f8ab4613bbca13c9746c12f",
+    "a1d53a262ed20b8823dbac1613b7b75512de8d8390418c937f08c2a5a446214a",
+    "00a3cae5683d72874bd3b0b94802791b0a8a8515bdd7c83f7076d959613a6a4b",
+    "26c13902dc7953e7bfe47c0e2f5a393c52847956ea5e558fd5b12ba2fd1bac1b"
+  ],
+  "preview": "/Users/spurs/Documents/Codex/2026-07-13/hatch-pet-users-spurs-codex-skills/work/frieren-failed-repair/qa/failed-preview.gif"
+}
